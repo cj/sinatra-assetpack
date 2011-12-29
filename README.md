@@ -45,9 +45,9 @@ class App < Sinatra::Base
   register Sinatra::AssetPack
 
   assets {
-    serve '/js',     from: 'app/js'        # Optional
-    serve '/css',    from: 'app/css'       # Optional
-    serve '/images', from: 'app/images'    # Optional
+    serve '/js',     :from => 'app/js'        # Optional
+    serve '/css',    :from => 'app/css'       # Optional
+    serve '/images', :from => 'app/images'    # Optional
 
     # The second parameter defines where the compressed version will be served.
     # (Note: that parameter is optional, AssetPack will figure it out.)
