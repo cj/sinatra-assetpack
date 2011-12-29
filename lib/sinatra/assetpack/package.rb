@@ -73,7 +73,7 @@ module Sinatra
       end
 
       def to_production_html(options={})
-        link_tag production_path, options, true
+        link_tag production_path, options
       end
 
       def minify
@@ -104,11 +104,12 @@ module Sinatra
       def css?() @type == :css; end
 
     private
-      def link_tag(file, options={}, production_host = false)
+      def link_tag(file, options={})
+        options = {:rel => 'stylesheet'}.merge(options)
         if js?
-          "<script src='#{@assets.production_host if production_host}#{e file}'#{kv options}></script>"
+          "<script src='#{@assets.production_host}#{e file}'#{kv options}></script>"
         elsif css?
-          "<link rel='stylesheet' href='#{@assets.production_host if production_host}#{e file}'#{kv options} />"
+          "<link href='#{@assets.production_host}#{e file}'#{kv options} />"
         end
       end
     end

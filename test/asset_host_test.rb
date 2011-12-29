@@ -11,7 +11,6 @@ class AssetHostTest < UnitTest
       js  :b, [ '/js/*.js' ]
     }
 
-
     get('/helper/img') { img '/images/foo.jpg' }
   end
 
@@ -31,27 +30,13 @@ class AssetHostTest < UnitTest
     assert App.assets.packages['b.js'].to_production_html =~ %r{src='//cdn.example.org/assets/b.[a-f0-9]+.js'}
   end
 
-  test "host gets added to image helper path in production" do
-    app.stubs(:production?).returns(true)
+  test "host gets added to image helper path" do
     get '/helper/img'
     assert_equal "<img src='//cdn.example.org/images/foo.jpg' />", body 
   end
 
-  test "host doesn't get added to image helper path in development" do
-    app.stubs(:production?).returns(false)
-    get '/helper/img'
-    assert_equal "<img src='/images/foo.jpg' />", body 
-  end
-
-  test "host gets added to css image path in production" do
-    app.stubs(:production?).returns(true)
+  test "host gets added to css image path" do
     get '/css/style.css'
     assert body.include?('background: url(//cdn.example.org/images/404.png)')
-  end
-
-  test "host doesn't get added to css image path in development" do
-    app.stubs(:production?).returns(false)
-    get '/css/style.css'
-    assert body.include?('background: url(/images/404.png)')
   end
 end

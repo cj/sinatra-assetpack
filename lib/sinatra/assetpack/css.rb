@@ -17,7 +17,7 @@ module Sinatra
             path
           end
 
-          "url(#{settings.assets.production_host if settings.production?}#{url})"
+          "url(#{settings.assets.production_host}#{url})"
         }
       end
 

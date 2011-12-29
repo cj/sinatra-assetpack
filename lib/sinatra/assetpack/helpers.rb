@@ -22,9 +22,20 @@ module Sinatra
           end
         end
 
-        attrs[:src] = settings.assets.production_host + attrs[:src] if settings.production?
+        attrs[:src] = settings.assets.production_host + attrs[:src]
 
         "<img#{HtmlHelpers.kv attrs} />"
+      end
+
+      # Link a custom document
+      def link(src, options={})
+        attrs = { :src => src }.merge(options)
+
+        local = settings.assets.local_file_for src
+        attrs[:src] = BusterHelpers.add_cache_buster(src, local) if local
+        attrs[:src] = settings.assets.production_host + attrs[:src]
+
+        "<link #{HtmlHelpers.kv attrs} />"
       end
 
       def show_asset_pack(type, *args)
