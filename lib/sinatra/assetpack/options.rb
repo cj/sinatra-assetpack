@@ -264,6 +264,11 @@ module Sinatra
         end
       end
 
+      # Reads `public/#{path}` and returns the mtime and the output
+      def mtime(path)
+        BusterHelper.mtime_for(File.join(@output_path, path))
+      end
+
       # Returns the files as a hash.
       def files(match=nil)
           # All

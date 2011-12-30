@@ -1,3 +1,5 @@
+require 'net/http'
+
 module Sinatra
   module AssetPack
     # Class methods that will be given to the Sinatra application.
@@ -23,14 +25,16 @@ module Sinatra
       # Add routes for the compressed versions
       def add_compressed_routes!
         assets.packages.each do |name, package|
-          get package.route_regex do
-            mtime, contents = @template_cache.fetch(package.path) {
-              [ package.mtime, package.minify ]
-            }
-
-            content_type package.type
-            last_modified mtime
-            contents
+          mtime = assets.mtime(package.path)
+          if mtime.nil?
+            get package.route_regex do
+              mtime, contents = @template_cache.fetch(package.path) {
+                [ package.mtime, package.minify ]
+              }
+              content_type package.type
+              last_modified mtime
+              contents
+            end
           end
         end
       end
