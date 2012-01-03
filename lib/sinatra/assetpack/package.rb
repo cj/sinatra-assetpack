@@ -1,3 +1,6 @@
+require 'net/http'
+require 'uri'
+
 module Sinatra
   module AssetPack
     # A package.
@@ -50,8 +53,26 @@ module Sinatra
         paths_and_files.keys
       end
 
+      def already_built
+        built_locally || built_remotely
+      end
+
+      def built_locally
+        File.exists?(File.join(@assets.output_path, add_cache_buster(path)) 
+      end
+
+      def built_remotely
+        uri = URI.join(@assets.production_host, add_cache_buster(path))
+        Net::HTTP.start(uri.host, uri.port) do |http| 
+          http.head(uri.path).code =~ /(200|304)/
+        end
+      rescue Exception
+        false
+      end
+
+      # Return the maximum mtime for all the files in this package
       def mtime
-        BusterHelpers.mtime_for(files)
+        @mtime ||= BusterHelpers.mtime_for(files)
       end
 
       # Returns the regex for the route, including cache buster crap.
@@ -69,7 +90,7 @@ module Sinatra
 
       # The URI path of the minified file (with cache buster)
       def production_path
-        add_cache_buster @path, *files
+        @production_path ||= add_cache_buster @path, *files
       end
 
       def to_production_html(options={})

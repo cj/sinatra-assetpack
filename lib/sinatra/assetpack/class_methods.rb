@@ -25,8 +25,7 @@ module Sinatra
       # Add routes for the compressed versions
       def add_compressed_routes!
         assets.packages.each do |name, package|
-          mtime = assets.mtime(package.path)
-          if mtime.nil?
+          if !package.already_built
             get package.route_regex do
               mtime, contents = @template_cache.fetch(package.path) {
                 [ package.mtime, package.minify ]

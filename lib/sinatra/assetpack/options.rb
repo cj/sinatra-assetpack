@@ -60,6 +60,8 @@ module Sinatra
 
         @ignored = Array.new
 
+        @protocol = "http://"
+
         reset!
 
         # Defaults!
@@ -160,6 +162,7 @@ module Sinatra
       attrib :prebuild          # Bool
 
       attrib :host # String
+      attrib :protocol # String
 
       def js_compression(name=nil, options=nil)
         @js_compression = name  unless name.nil?
@@ -313,7 +316,7 @@ module Sinatra
       end
 
       def production_host
-        @host ? '//' + @host : ''
+        @host ? protocol + @host : ''
       end
 
     private
