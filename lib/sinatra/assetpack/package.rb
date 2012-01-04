@@ -126,10 +126,10 @@ module Sinatra
 
     private
       def link_tag(file, options={})
-        options = {:rel => 'stylesheet'}.merge(options)
         if js?
           "<script src='#{@assets.production_host}#{e file}'#{kv options}></script>"
         elsif css?
+          options = {:rel => 'stylesheet'}.merge(options)
           "<link href='#{@assets.production_host}#{e file}'#{kv options} />"
         end
       end
