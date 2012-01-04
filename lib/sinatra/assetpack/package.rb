@@ -58,7 +58,7 @@ module Sinatra
       end
 
       def built_locally
-        File.exists?(File.join(@assets.output_path, add_cache_buster(path)) 
+        File.exists?(File.join(@assets.output_path, add_cache_buster(path)))
       end
 
       def built_remotely
